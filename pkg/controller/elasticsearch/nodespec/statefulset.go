@@ -92,7 +92,8 @@ func BuildStatefulSet(
 
 	// maybe inherit volumeClaimTemplates ownerRefs from the existing StatefulSet
 	var existingClaims []corev1.PersistentVolumeClaim
-	if existingSset, exists := existingStatefulSets.GetByName(statefulSetName); exists {
+	existingSset, ssetExists := existingStatefulSets.GetByName(statefulSetName)
+	if ssetExists {
 		existingClaims = existingSset.Spec.VolumeClaimTemplates
 	}
 	claims, err := setVolumeClaimsControllerReference(nodeSet.VolumeClaimTemplates, existingClaims, es)
